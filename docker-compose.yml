@@ -12,7 +12,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/app/Dockerfile
-    command: bundle exec puma -C config/puma.rb
     volumes:
       - .:/myapp
     depends_on:

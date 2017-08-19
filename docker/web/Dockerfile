@@ -17,7 +17,7 @@ RUN mkdir log
 COPY public public/
 
 # Copy Nginx config template
-COPY docker/web/nginx.conf /tmp/docker_example.nginx
+COPY docker/web/app.conf /tmp/docker_example.nginx
 
 # substitute variable references in the Nginx config template for real values from the environment
 # put the final config in its place

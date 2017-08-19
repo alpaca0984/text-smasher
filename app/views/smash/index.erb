@@ -44,6 +44,7 @@ document.getElementById('js-submit').addEventListener('click', (e) => {
     data: JSON.stringify(body),
   })
   .done(function(data) {
+    $('#resultList').empty();
     data.documents.forEach(result => {
       result.keyPhrases.forEach(phrase => {
         $('#resultList').append(`<li><input type="checkbox" /> ${phrase}</li>`);
