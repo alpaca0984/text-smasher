@@ -1,0 +1,57 @@
+<div style="margin-bottom: 16px">
+  <img style="width: 38px; height: 38px" src="https://i.pinimg.com/originals/a6/bd/07/a6bd07140b8e12855ce842f189d8fa36.jpg" alt="Smiley face">
+  <span style="font-size: 32px">Smash text into words</span>
+</div>
+
+<div style="display: inline-block">
+    <textarea name="name" id="js-inputText" rows="8" cols="80">
+    </textarea>
+
+    <button type="submit" name="submit" id="js-submit">Send</button>
+</div>
+
+<p>Result</p>
+<ul id="resultList" style="list-style: none">
+</ul>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script type="text/javascript">
+'use strict';
+
+document.getElementById('js-submit').addEventListener('click', (e) => {
+  const inputText = document.getElementById('js-inputText').value;
+  var params = {
+    // Requst params if needed.
+  };
+  var body = {
+    "documents": [
+      {
+        "language": "en",
+        "id": "1",
+        "text": inputText,
+      }
+    ]
+  };
+
+  $.ajax({
+    url: "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases?" + $.param(params),
+    beforeSend: function(xhrObj){
+      xhrObj.setRequestHeader("Content-Type", "application/json");
+      xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", "");
+      xhrObj.setRequestHeader("Accept","application/json");
+    },
+    type: "POST",
+    data: JSON.stringify(body),
+  })
+  .done(function(data) {
+    data.documents.forEach(result => {
+      result.keyPhrases.forEach(phrase => {
+        $('#resultList').append(`<li><input type="checkbox" /> ${phrase}</li>`);
+      });
+    });
+  })
+  .fail(function(error) {
+    alert(error.responseText);
+  });
+});
+</script>
