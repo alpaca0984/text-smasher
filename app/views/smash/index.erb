@@ -14,44 +14,49 @@
 
 <script type="text/javascript">
 'use strict';
+document.addEventListener("DOMContentLoaded", () => {
 
-document.getElementById('js-submit').addEventListener('click', listener => {
-  const inputText = document.getElementById('js-inputText').value;
-  var requestBody = {
-    "documents": [
-      {
-        "language": "en",
-        "id": "1",
-        "text": inputText,
-      }
-    ]
-  };
+  // When sugmit button clicked, call Azure Text Analytics API.
+  document.getElementById('js-submit').addEventListener('click', listener => {
+    const inputText = document.getElementById('js-inputText').value;
+    const requestBody = {
+      "documents": [
+        {
+          "language": "en",
+          "id": "1",
+          "text": inputText,
+        }
+      ]
+    };
 
-  // API request
-  (requestBody => {
-    const request = new XMLHttpRequest();
+    // API request
+    (requestBody => {
+      const request = new XMLHttpRequest();
 
-    request.open('POST', 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases', true);
-    request.setRequestHeader("Content-Type", "application/json");
-    request.setRequestHeader("Ocp-Apim-Subscription-Key", "xxxxxxxxxxxxxxxxxxxxxxxxxxx"); // Set API key.
-    request.setRequestHeader("Accept","application/json");
-    request.onload = () => {
-      document.getElementById('resultList').innerHtml = '';
-      const resultList = document.getElementById('resultList');
-      JSON.parse(request.responseText).documents.forEach(result => {
-        result.keyPhrases.forEach(phrase => {
-          var li = document.createElement('li');
-          li.innerHTML = `<label><input type="checkbox" />${phrase}</label>`;
-          resultList.appendChild(li);
+      request.open('POST', 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/keyPhrases', true);
+      request.setRequestHeader("Content-Type", "application/json");
+      request.setRequestHeader("Ocp-Apim-Subscription-Key", "xxxxxxxxxxxxxxxxxxxxx"); // Set API key.
+      request.setRequestHeader("Accept","application/json");
+      request.onload = () => {
+        const resultList = document.getElementById('resultList');
+        // Clear resultList field.
+        resultList.innerHTML = '';
+        // Set response data.
+        JSON.parse(request.responseText).documents.forEach(result => {
+          result.keyPhrases.forEach(phrase => {
+            const li = document.createElement('li');
+            li.innerHTML = `<label><input type="checkbox" />${phrase}</label>`;
+            resultList.appendChild(li);
+          });
         });
-      });
-    };
-    request.onerror = () => {
-      alert(request.responseText);
-    };
+      };
+      request.onerror = () => {
+        alert(request.responseText);
+      };
 
-    request.send(JSON.stringify(requestBody));
-  })(requestBody);
+      request.send(JSON.stringify(requestBody));
+    })(requestBody);
 
+  });
 });
 </script>
